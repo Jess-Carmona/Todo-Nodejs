@@ -35,14 +35,14 @@ app.post('/users', (req, res) => {
     return res.status(400).json({error: "user already exsists!"})
   }
 
-  users.push(
-    { 
+  const user = {
       id: uuidv4(),
       name, 
       username, 
       todos: []
-    }
-  );
+  };
+
+  users.push(user);
   
   return res.status(201).send(user);
 
@@ -50,7 +50,7 @@ app.post('/users', (req, res) => {
 
 app.get('/todos', checksExistsUserAccount, (req, res) => {
   const { user } = req;
-  return res. json(user.todos);
+  return res.json(user.todos);
 });
 
 app.post('/todos', checksExistsUserAccount, (req, res) => {
@@ -60,7 +60,7 @@ app.post('/todos', checksExistsUserAccount, (req, res) => {
   const todo = {
     id: uuidv4(),
     title: title,
-    done: fale,
+    done: false,
     deadline: new Date(deadline),
     created_at: new Date()
   }
@@ -82,8 +82,9 @@ app.put('/todos/:id', checksExistsUserAccount, (req, res) => {
   }
 
   todo.title = title;
-  todo.dedline = new Date(deadline);
+  todo.deadline = new Date(deadline);
 
+  return res.json(todo);
 
 });
 
@@ -116,7 +117,7 @@ app.delete('/todos/:id', checksExistsUserAccount, (req, res) => {
 
   user.todos.splice(todoIndex, 1);
 
-  return res.status(404).json();
+  return res.status(204).json();
 
 });
 
